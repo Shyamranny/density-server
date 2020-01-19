@@ -8,6 +8,6 @@ public class DensityIdentificationConfig extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
-        from("seda:density-request");
+       // from("seda:density-request");
     }
 }

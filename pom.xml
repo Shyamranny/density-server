@@ -69,7 +69,7 @@
 			<artifactId>camel-http</artifactId>
 			<version>${camel-version}</version>
 		</dependency>
-		<dependency>
+        <dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-http-common</artifactId>
 			<version>${camel-version}</version>
@@ -93,6 +93,11 @@
 			<groupId>org.bytedeco</groupId>
 			<artifactId>javacv-platform</artifactId>
 			<version>1.5.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.java-websocket</groupId>
+			<artifactId>Java-WebSocket</artifactId>
+			<version>1.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

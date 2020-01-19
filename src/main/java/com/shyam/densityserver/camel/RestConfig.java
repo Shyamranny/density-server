@@ -1,13 +1,18 @@
 package com.shyam.densityserver.camel;
 
 import com.shyam.densityserver.core.CameraDensity;
+import com.shyam.densityserver.core.DensitySocketServer;
+import com.shyam.densityserver.core.RawImage;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+
+import java.net.UnknownHostException;
 
 @Component
 public class RestConfig extends RouteBuilder {
@@ -17,9 +22,6 @@ public class RestConfig extends RouteBuilder {
 
     @Value("${server.port}")
     private String serverPort;
-
-    @Value("${imageExtractor.extractedImageFolder}")
-    private String extractedImageFolder;
 
     @Override
     public void configure() throws Exception {
@@ -48,7 +50,7 @@ public class RestConfig extends RouteBuilder {
                 .to("direct:remoteService");
 
         from("direct:remoteService")
-                .wireTap("seda:density-request")
+               // .wireTap("seda:density-request")
                 .routeId("direct-route")
                 .log(">>> ${body.cameraId}")
                 .log(">>> ${body.density}")
@@ -57,10 +59,18 @@ public class RestConfig extends RouteBuilder {
 
         rest("/camera/")
                 .id("api-route")
-                .post("/upload")
+                .post("/raw")
+                .bindingMode(RestBindingMode.json)
+                .type(RawImage.class)
                 .to("direct:rawImage");
 
 
 
     }
+
+    @Bean(name = "densitySocketServer")
+    public DensitySocketServer densitySocketServer() throws UnknownHostException {
+        return new DensitySocketServer();
+    }
+
 }

@@ -1,9 +1,11 @@
 package com.shyam.densityserver.core;
 
-public class CameraDensity {
+public class RawImage {
 
     private String cameraId;
-    private int density;
+
+    private String rawImage;
+
     private String locationId;
 
     public String getCameraId() {
@@ -14,12 +16,12 @@ public class CameraDensity {
         this.cameraId = cameraId;
     }
 
-    public int getDensity() {
-        return density;
+    public String getRawImage() {
+        return rawImage;
     }
 
-    public void setDensity(int density) {
-        this.density = density;
+    public void setRawImage(String rawImage) {
+        this.rawImage = rawImage;
     }
 
     public String getLocationId() {
@@ -28,14 +30,5 @@ public class CameraDensity {
 
     public void setLocationId(String locationId) {
         this.locationId = locationId;
-    }
-
-    @Override
-    public String toString() {
-        return "CameraDensity{" +
-                "cameraId='" + cameraId + '\'' +
-                ", density=" + density +
-                ", locationId='" + locationId + '\'' +
-                '}';
     }
 }
