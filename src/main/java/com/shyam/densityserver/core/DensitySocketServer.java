@@ -5,7 +5,6 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -38,27 +37,28 @@ public class DensitySocketServer extends WebSocketServer {
 
     @Override
     public void onOpen( WebSocket conn, ClientHandshake handshake ) {
-        conn.send("Welcome to the server!"); //This method sends a message to the new client
-        broadcast( "new connection: " + handshake.getResourceDescriptor() );
+
+        conn.send("{\"message\":\"welcome\"}"); //This method sends a message to the new client
         clients.add(conn);//This method sends a message to all clients connected
-        System.out.println( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
+        LOGGER.debug( conn.getRemoteSocketAddress().getAddress().getHostAddress() + " entered the room!" );
     }
 
     @Override
     public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
-        broadcast( conn + " has left the room!" );
-        System.out.println( conn + " has left the room!" );
+        clients.remove(conn);
+        //broadcast( conn + " has left the room!" );
+        LOGGER.debug( conn + " has left the room!" );
     }
 
     @Override
     public void onMessage( WebSocket conn, String message ) {
-        broadcast( message );
-        System.out.println( conn + ": " + message );
+        //broadcast( message );
+        LOGGER.debug( conn + ": " + message );
     }
     @Override
     public void onMessage( WebSocket conn, ByteBuffer message ) {
-        broadcast( message.array() );
-        System.out.println( conn + ": " + message );
+        //broadcast( message.array() );
+        LOGGER.debug( conn + ": " + message );
     }
 
     @Override
@@ -71,7 +71,7 @@ public class DensitySocketServer extends WebSocketServer {
 
     @Override
     public void onStart() {
-        System.out.println("Server started!");
+        LOGGER.debug("Server started!");
         setConnectionLostTimeout(0);
         setConnectionLostTimeout(100);
     }
@@ -81,7 +81,7 @@ public class DensitySocketServer extends WebSocketServer {
 
         DensitySocketServer s = new DensitySocketServer( PORT );
         s.start();
-        System.out.println( "ChatServer started on port: " + s.getPort() );
+        LOGGER.debug( "ChatServer started on port: " + s.getPort() );
 
 
     }
@@ -94,7 +94,9 @@ public class DensitySocketServer extends WebSocketServer {
     public void push(String message) {
         LOGGER.info("Received Message in push method: "+message);
         if(!clients.isEmpty()) {
-            clients.forEach(e -> e.send(message));
+            try {
+                clients.forEach(e -> e.send(message));
+            }catch (Exception e){}
         }
 
     }

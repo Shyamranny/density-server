@@ -95,8 +95,13 @@ public class RawImageConfig extends RouteBuilder {
 
                     ArrayList<CameraDensity> list = exchange.getIn().getBody(ArrayList.class);
 
-                    CameraDensity out = list.get(0);
+                    int total = 0;
+                    for (CameraDensity cd : list) {
+                        total += cd.getDensity();
+                    }
 
+                    CameraDensity out = list.get(0);
+                    out.setDensity(total / list.size());
                     exchange.getIn().setBody(out);
 
                 })

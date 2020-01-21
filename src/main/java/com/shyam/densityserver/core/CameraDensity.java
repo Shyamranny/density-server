@@ -32,10 +32,10 @@ public class CameraDensity {
 
     @Override
     public String toString() {
-        return "CameraDensity{" +
-                "cameraId='" + cameraId + '\'' +
-                ", density=" + density +
-                ", locationId='" + locationId + '\'' +
+        return "{" +
+                "\"cameraId\":\"" + cameraId + "\"" +
+                ", \"density\":" + density +
+                ", \"locationId\":\"" + locationId + "\"" +
                 '}';
     }
 }

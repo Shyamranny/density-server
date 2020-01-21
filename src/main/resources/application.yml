@@ -21,5 +21,5 @@ spring:
    main:
      allow-bean-definition-overriding: true
 camera:
-  rawImageLocation: /Users/sumith/Documents/temp/density-server/raw-image
+  rawImageLocation: /Users/shyam/Documents/temp/density-server/raw-image
 

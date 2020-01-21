@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie Location</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <style>
+
+  	body{
+  		font-family: 'Arial';
+  	}
+	#videourl{
+		width: 400px;
+		padding: 10px 32px;
+		margin-left: 10px;
+	}
+	#seconds{
+		width: 10px;
+		padding: 10px 32px;
+	}
+	button{
+		border: none;
+	  	color: white;
+	  	padding: 10px 32px;
+	  	text-align: center;
+	  	text-decoration: none;
+	  	display: inline-block;
+	  	font-size: 16px;
+		background-color: #008CBA;
+	}
+	.page-title{
+		color: #7c795d; 
+		
+		font-size: 40px; 
+		font-weight: normal; 
+		line-height: 48px; 
+		margin: 0; 
+	}
+	
+</style>
+</head>
+<body>
+	<div class="title">
+		<span class="page-title">Density Client</span>
+	</div>
+	<div id="density">
+		
+	</div>
+</body>
+<script>
+const ws = new WebSocket('ws://localhost:8887/');
+ws.onopen = function() {
+    console.log('WebSocket Client Connected');
+    ws.send('Hi this is from web client.');
+};
+ws.onmessage = function(e) {
+
+  console.log("Received: '" + JSON.stringify(e.data) + "'");
+	var d = JSON.parse(e.data)
+  if(d.cameraId) {
+
+	  if ($("#loc-" + d.locationId).length) {
+
+	  	$("#loc-" + d.locationId).find(".cam").html(d.cameraId)
+	  	$("#loc-" + d.locationId).find(".loc").html(d.locationId)
+	  	$("#loc-" + d.locationId).find(".den").html(d.density)
+
+	  } else {
+	  	var $clone = $('#message-template').html();
+	  	$clone = $clone.replace("{{camera-id}}", d.cameraId)
+	  					.replace("{{location-id}}", d.locationId)
+	  					.replace("{{location-id}}", d.locationId)
+	                   	.replace("{{density-value}}", d.density);
+
+	  	$('#density').append($clone);
+	  }
+
+  } 
+
+
+};
+
+
+$("button").click(function(){
+  $.post("http://localhost:4000/extract",
+  {
+    videoUrl: $('#videourl').val(),
+    frameDurationInSecond: $('#seconds').val()
+  },
+  function(data, status){
+    alert("Data: " + data + "\nStatus: " + status);
+  });
+});
+
+</script>
+<script id="message-template" type = "text/template">
+	<div class="density" id="loc-{{location-id}}">
+		<span>Camera:</span>
+		<span class="cam">{{camera-id}}</span>
+		<span>Location:</span>
+		<span class="loc">{{location-id}}</span>
+		<span>Density:</span>
+		<span class="den">{{density-value}}</span>
+	</div>
+</script>
+</html>

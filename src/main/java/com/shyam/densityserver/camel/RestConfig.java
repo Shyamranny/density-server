@@ -42,7 +42,7 @@ public class RestConfig extends RouteBuilder {
                 .bindingMode(RestBindingMode.json);
 
         rest("/camera/")
-                .id("api-route")
+                .id("api-density")
                 .consumes("application/json")
                 .post("/density")
                 .bindingMode(RestBindingMode.json)
@@ -50,10 +50,9 @@ public class RestConfig extends RouteBuilder {
                 .to("direct:remoteService");
 
         from("direct:remoteService")
-               // .wireTap("seda:density-request")
+                .wireTap("seda:density-request")
                 .routeId("direct-route")
-                .log(">>> ${body.cameraId}")
-                .log(">>> ${body.density}")
+                .log(">>> ${body}")
                 .setBody(simple(""))
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200));
 
@@ -63,8 +62,6 @@ public class RestConfig extends RouteBuilder {
                 .bindingMode(RestBindingMode.json)
                 .type(RawImage.class)
                 .to("direct:rawImage");
-
-
 
     }
 
